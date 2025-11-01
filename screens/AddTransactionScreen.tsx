@@ -47,7 +47,6 @@ export default function AddTransactionScreen() {
     "Other",
   ];
 
-  // ✅ Prefill if editing
   useEffect(() => {
     if (editTx) {
       setDate(editTx.date);

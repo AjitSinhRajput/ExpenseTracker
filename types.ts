@@ -9,8 +9,8 @@ export type Category =
 
 export interface Transaction {
   id: string;
-  date: string; // ISO yyyy-mm-dd
-  amount: number; // positive number
+  date: string;
+  amount: number;
   description: string;
   location: string;
   type: TransactionType;

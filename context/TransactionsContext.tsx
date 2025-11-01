@@ -6,7 +6,7 @@ type State = Transaction[];
 type Action =
   | { type: "ADD"; payload: Omit<Transaction, "id"> }
   | { type: "UPDATE"; id: string; payload: Omit<Transaction, "id"> }
-  | { type: "DELETE"; id: string }; // 👈 new action type
+  | { type: "DELETE"; id: string };
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -19,7 +19,7 @@ function reducer(state: State, action: Action): State {
       );
 
     case "DELETE":
-      return state.filter((tx) => tx.id !== action.id); // 👈 remove matching id
+      return state.filter((tx) => tx.id !== action.id);
 
     default:
       return state;
@@ -30,7 +30,7 @@ const TransactionsContext = createContext<{
   transactions: Transaction[];
   addTransaction: (t: Omit<Transaction, "id">) => void;
   updateTransaction: (id: string, t: Omit<Transaction, "id">) => void;
-  deleteTransaction: (id: string) => void; // 👈 new method
+  deleteTransaction: (id: string) => void;
 }>({
   transactions: [],
   addTransaction: () => {},
@@ -49,7 +49,7 @@ export const TransactionsProvider: React.FC<React.PropsWithChildren> = ({
   const updateTransaction = (id: string, payload: Omit<Transaction, "id">) =>
     dispatch({ type: "UPDATE", id, payload });
 
-  const deleteTransaction = (id: string) => dispatch({ type: "DELETE", id }); // 👈 dispatch delete
+  const deleteTransaction = (id: string) => dispatch({ type: "DELETE", id });
 
   const value = useMemo(
     () => ({
