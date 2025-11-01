@@ -1,8 +1,8 @@
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Transaction } from "../types";
 import { theme } from "../theme/colors";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 interface Props {
   tx: Transaction;
@@ -10,10 +10,24 @@ interface Props {
 }
 
 export default function TransactionItem({ tx, onPress }: Props) {
-  const isCredit = tx.type === "Credit" || tx.type === "Refund";
-  const sign = isCredit ? "+" : "-";
-  const color = isCredit ? theme.success : theme.danger;
-  const icon = isCredit ? "arrow-up-circle" : "arrow-down-circle";
+  // Logic for icon, color, and prefix
+  let sign = "";
+  let color = theme.text;
+  let icon = "circle-outline";
+
+  if (tx.type === "Credit") {
+    sign = "+";
+    color = theme.success;
+    icon = "arrow-up-circle";
+  } else if (tx.type === "Debit") {
+    sign = "-";
+    color = theme.danger;
+    icon = "arrow-down-circle";
+  } else if (tx.type === "Refund") {
+    sign = "+";
+    color = theme.info;
+    icon = "cash-refund"; // 👈 new refund icon
+  }
 
   return (
     <Pressable
@@ -26,15 +40,16 @@ export default function TransactionItem({ tx, onPress }: Props) {
       android_ripple={{ color: theme.muted }}
     >
       <View style={styles.iconBox}>
-        <MaterialCommunityIcons name={icon} size={22} color={color} />
+        <MaterialCommunityIcons name={icon as any} size={22} color={color} />
       </View>
 
       <View style={{ flex: 1 }}>
+        r
         <Text style={styles.title} numberOfLines={1}>
           {tx.description}
         </Text>
         <Text style={styles.sub} numberOfLines={1}>
-          {tx.category} • {tx.location} • {tx.date}
+          [{tx.type}] {tx.category} • {tx.location} • {tx.date}
         </Text>
       </View>
 
@@ -54,7 +69,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-    borderLeftWidth: 4, // subtle colored accent
+    borderLeftWidth: 4,
   },
   iconBox: {
     width: 28,

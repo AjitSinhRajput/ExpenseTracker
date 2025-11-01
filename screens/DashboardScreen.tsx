@@ -8,7 +8,6 @@ import {
   Modal,
   TouchableOpacity,
 } from "react-native";
-
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { theme } from "../theme/colors";
 import { useAuth } from "../context/AuthContext";
@@ -26,10 +25,10 @@ export default function DashboardScreen() {
     // @ts-ignore
     nav.setOptions({
       title: "Dashboard",
-      headerTitleAlign: "center", // ✅ centers title
+      headerTitleAlign: "center",
       headerStyle: { backgroundColor: theme.background },
       headerTintColor: theme.text,
-      headerRightContainerStyle: { paddingRight: 12 }, // ✅ pushes to edge
+      headerRightContainerStyle: { paddingRight: 12 },
       headerLeftContainerStyle: { paddingLeft: 12 },
       headerRight: () => (
         <Pressable
@@ -54,8 +53,13 @@ export default function DashboardScreen() {
     const debit = transactions
       .filter((t) => t.type === "Debit")
       .reduce((s, t) => s + t.amount, 0);
-    const balance = credit - debit;
-    return { credit, debit, balance };
+    const refund = transactions
+      .filter((t) => t.type === "Refund")
+      .reduce((s, t) => s + t.amount, 0);
+
+    // Refund adds back to user balance like Credit
+    const balance = credit + refund - debit;
+    return { credit, debit, refund, balance };
   }, [transactions]);
 
   return (
@@ -78,6 +82,13 @@ export default function DashboardScreen() {
               -${totals.debit.toFixed(2)}
             </Text>
           </View>
+
+          <View style={[styles.card, { backgroundColor: theme.surface }]}>
+            <Text style={styles.cardLabel}>Refund</Text>
+            <Text style={[styles.cardValue, { color: theme.info }]}>
+              +${totals.refund.toFixed(2)}
+            </Text>
+          </View>
         </View>
 
         <View
@@ -89,7 +100,7 @@ export default function DashboardScreen() {
             },
           ]}
         >
-          <Text style={styles.cardLabel}>Balance Difference</Text>
+          <Text style={styles.cardLabel}>Net Balance</Text>
           <Text
             style={[
               styles.balanceValue,
@@ -180,11 +191,11 @@ const styles = StyleSheet.create({
   summaryRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    gap: 10,
+    gap: 8,
   },
   card: {
     flex: 1,
-    padding: 14,
+    padding: 12,
     borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
@@ -197,7 +208,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginBottom: 4,
   },
-  cardValue: { fontWeight: "800", fontSize: 18 },
+  cardValue: { fontWeight: "800", fontSize: 17 },
   balanceCard: {
     marginTop: 14,
     borderRadius: 14,

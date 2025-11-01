@@ -11,4 +11,5 @@ export const theme = {
   subtext: "#AAB2C8",
   border: "#2A3142",
   muted: "#2A2F3A",
+  info: "#1E90FF",
 };
