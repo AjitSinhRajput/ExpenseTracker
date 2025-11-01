@@ -44,7 +44,6 @@ export default function TransactionItem({ tx, onPress }: Props) {
       </View>
 
       <View style={{ flex: 1 }}>
-        r
         <Text style={styles.title} numberOfLines={1}>
           {tx.description}
         </Text>
